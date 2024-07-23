@@ -1,8 +1,5 @@
-using Alteruna;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,30 +15,27 @@ public class PlayerObject : MonoBehaviour
     public LayerMask m_characterLayer;
     private List<Tuple<string, GameObject>> m_giftCollection;
     private bool m_dead = false;
-    //private Spawner m_spawner;
 
-    //private Alteruna.Avatar m_avatar;
-    //private Multiplayer m_multiplayer;
+    private Alteruna.Avatar m_avatar;
 
     // Start is called before the first frame update
     void Start()
     {
-        //m_avatar = GetComponent<Alteruna.Avatar>();
+        m_avatar = GetComponent<Alteruna.Avatar>();
 
-        //if (!m_avatar.IsMe) { return; }
+        if (!m_avatar.IsMe) { return; }
 
-        //if (m_avatar.IsOwner)
-        //{
-        //    var characterLayerIndex = Mathf.RoundToInt(Mathf.Log(m_characterLayer.value, 2));
-        //    foreach (Transform child in transform.Find("Miner3D"))
-        //    {
-        //        child.gameObject.layer = characterLayerIndex;
-        //    }
-        //}
+        if (m_avatar.IsOwner)
+        {
+            var characterLayerIndex = Mathf.RoundToInt(Mathf.Log(m_characterLayer.value, 2));
+            foreach (Transform child in transform.Find("Miner3D"))
+            {
+                child.gameObject.layer = characterLayerIndex;
+            }
+        }
 
-        //m_multiplayer = Multiplayer.Instance;
-        //m_spawner = GetComponent<Spawner>();
-        
+        transform.Find("Camera").gameObject.SetActive(true); 
+        transform.Find("Canvas").gameObject.SetActive(true);
         m_player = new Player(gameObject);
         m_giftCollection = new List<Tuple<string, GameObject>>();
     }
@@ -49,7 +43,7 @@ public class PlayerObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (!m_avatar.IsMe) { return; }
+        if (!m_avatar.IsMe) { return; }
 
         if (!m_player.IsAlive())
         {
@@ -59,7 +53,7 @@ public class PlayerObject : MonoBehaviour
         }
 
         m_player.DoMovement();
-        CheckDropDynamite();
+        //CheckDropDynamite();
         CheckUsedPickaxe();
         UpdateHUD();
     }
@@ -117,23 +111,19 @@ public class PlayerObject : MonoBehaviour
         m_dead = true;
     }
 
-    private void CheckDropDynamite()
-    {
-        if (m_player.DroppedDynamite())
-        {
-            var spawnPosition = new Vector3(transform.position.x, 0.1f, transform.position.z);
-            var dynamitePrefab = m_player.GetDynamiteRadius() > Utility.DYNAMITE_RADIUS ? m_bigDynamitePrefab : m_dynamitePrefab;
-            var dynamite = Instantiate(dynamitePrefab, spawnPosition, Quaternion.identity);
-            dynamite.GetComponent<Dynamite>().SetOwner(this);
+    //private void CheckDropDynamite()
+    //{
+    //    if (m_player.DroppedDynamite())
+    //    {
+    //        var spawnPosition = new Vector3(transform.position.x, 0.1f, transform.position.z);
+    //        var dynamitePrefab = m_player.GetDynamiteRadius() > Utility.DYNAMITE_RADIUS ? m_bigDynamitePrefab : m_dynamitePrefab;
+    //        var dynamite = Instantiate(dynamitePrefab, spawnPosition, Quaternion.identity);
+    //        dynamite.GetComponent<Dynamite>().SetOwner(m_player);
 
-        }
-        //var _ = m_spawner.Spawn(dynamitePrefab, spawnPosition, Quaternion.identity);
+    //    }
+    //}
 
-        //var param = new ProcedureParameters();
-        //param.Set("ownerName", gameObject.name);
-        //Debug.Log("about to set owner");
-        //m_multiplayer.InvokeRemoteProcedure("SetOwner", UserId.All, param);
-    }
+    public Player GetPlayer() { return m_player; }
 
     private void CheckUsedPickaxe()
     {
@@ -143,8 +133,9 @@ public class PlayerObject : MonoBehaviour
         {
             if (m_player.CanUsePickaxe())
             {
-                indicator.gameObject.GetComponent<Image>().color = Color.red;
-                indicator.localScale = new Vector3(0.2f, 0.2f, 1);
+                indicator.gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("Textures/" + "Pickaxe icon"); ;
+                indicator.localScale = new Vector3(0.5f, 0.5f, 1);
+                indicator.gameObject.GetComponent<Image>().color = new Color(255, 255, 255);
             }
 
             if (m_player.ActivatedPickaxe())
@@ -152,12 +143,13 @@ public class PlayerObject : MonoBehaviour
                 var audioSrc = GetComponent<AudioSource>();
                 audioSrc.clip = m_pickaxeAudio;
                 audioSrc.Play();
-                hit.collider.gameObject.GetComponent<Breakable>().DestroyWall(this);
+                hit.collider.gameObject.GetComponent<Breakable>().DestroyWall(m_player);
                 m_player.RemovePickaxe();
             }
         }
         else
         {
+            indicator.gameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>("Textures/" + "circle"); ;
             indicator.gameObject.GetComponent<Image>().color = new Color(255, 255, 255, 0.2f);
             indicator.localScale = new Vector3(0.1f, 0.1f, 1);
         }
@@ -165,6 +157,8 @@ public class PlayerObject : MonoBehaviour
 
     public void AddGift(string giftName)
     {
+        if (!m_avatar.IsMe) { return; }
+
         switch (giftName)
         {
             case "GiftHeart":
@@ -181,7 +175,7 @@ public class PlayerObject : MonoBehaviour
                 AddGiftIcon(Utility.GIFT_PICKAXE_ICON);
                 break;
             case "GiftShoes":
-                AddGiftIcon(Utility.GIFT_SHOES_ICON);
+                AddGiftIcon(Utility.GIFT_SHOES_ICON, "SPACE");
                 m_player.AddJump();
                 break;
             case "GiftPoints":
@@ -194,18 +188,20 @@ public class PlayerObject : MonoBehaviour
         }
     }
 
-    private void AddGiftIcon(string giftName)
+    private void AddGiftIcon(string giftName, string keyBind="")
     {
-        if (GiftInGiftCollection(giftName))
-        {
-            return;
-        }
+        if (GiftInGiftCollection(giftName)) { return; }
 
         try
         {
             var giftPrefab = Instantiate(m_giftIcon, new Vector3(0, 0, 0), Quaternion.identity);
             giftPrefab.transform.SetParent(gameObject.transform.Find("Canvas"));
             var gift = giftPrefab.transform;
+
+            if (keyBind != "")
+            {
+                gift.Find("KeyBind").gameObject.GetComponent<TMP_Text>().text = keyBind;
+            }
 
             var giftPos = GetGiftIconPos(gift, m_giftCollection.Count);
 
@@ -270,7 +266,9 @@ public class PlayerObject : MonoBehaviour
 
     public void DealDamage(int dmg)
     {
-        m_player.DealDamage(dmg);
+        if (!m_avatar.IsMe) { return; }
+
+        m_player.DealDamage(dmg); 
     }
 
     public string GetName() { return m_player.GetName(); }
@@ -281,7 +279,7 @@ public class PlayerObject : MonoBehaviour
 
     public float GetDynamiteRadius() { return  m_player.GetDynamiteRadius(); }
 
-    public void RestoreDynamite() { m_player.RestoreAvailableDynamites(); }
+    public void RestoreDynamite() { m_player.RestoreDynamite(); }
 
     public void AddScore(int score) { m_player.AddScore(score); }
 }

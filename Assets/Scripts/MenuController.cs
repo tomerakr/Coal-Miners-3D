@@ -1,10 +1,11 @@
 using UnityEngine;
+using Alteruna;
 
-public class MenuController : MonoBehaviour
+public class MenuController : AttributesSync
 {
     public GameObject[] m_buttons;
-
     public GameObject m_scoreboard;
+    public GameObject m_nameInput;
 
     // Start is called before the first frame update
     void Start()
@@ -12,6 +13,10 @@ public class MenuController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
         StaticData.m_buttons = m_buttons;
         StaticData.m_scoreboard = m_scoreboard;
+        if (!PlayerPrefs.HasKey("Name")) //TODO
+        {
+            m_nameInput.SetActive(true);
+        }
     }
 
     // Update is called once per frame

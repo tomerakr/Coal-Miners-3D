@@ -1,7 +1,8 @@
 using System.Collections;
 using UnityEngine;
+using Alteruna;
 
-public class Breakable : MonoBehaviour
+public class Breakable : AttributesSync
 {
     private Vector2 m_positionInMatrix;
     public GameObject[] m_giftsPrefab;
@@ -9,35 +10,43 @@ public class Breakable : MonoBehaviour
 
     public void SetPosition(Vector2 position) { m_positionInMatrix = position; }
 
-    public void DestroyWall(PlayerObject dynamiteOwner)
+    public void DestroyWall(Player destroyer)
+    {
+        if (destroyer == null) { return; }
+        
+        destroyer.AddScore(Utility.BREALABLE_SCORE);
+        var giftIndex = Random.Range(0, m_giftsPrefab.Length);
+        BroadcastRemoteMethod(nameof(DestroyWall2), giftIndex);
+    }
+
+    [SynchronizableMethod]
+    private void DestroyWall2(int giftIndex)
     {
         StartCoroutine(FructuredWallAnimation());
-        DropGift(transform.position);
-        dynamiteOwner.AddScore(Utility.BREALABLE_SCORE);
+        DropGift(giftIndex);
     }
 
     private IEnumerator FructuredWallAnimation()
     {
-        var _ = Instantiate(m_fracturedWall, gameObject.transform.position, Quaternion.identity);
-        var audio = _.GetComponent<AudioSource>();
-        audio.Play();
+        var fructuredWall = Instantiate(m_fracturedWall, gameObject.transform.position, Quaternion.identity);
+        fructuredWall.GetComponent<AudioSource>().Play();
+        
         gameObject.transform.localScale = new Vector3(0, 0, 0);
 
         yield return new WaitForSeconds(2.5f);
 
-        Destroy(_);
+        Destroy(fructuredWall);
         Destroy(gameObject);
     }
 
-    private void DropGift(Vector3 pos)
+    private void DropGift(int giftIndex)
     {
         if (Random.Range(0, 100) > Utility.GIFT_CHANCE)
         {
             return;
         }
 
-        var giftIndex = Random.Range(0, m_giftsPrefab.Length);
-        var giftPos = new Vector3(pos.x, m_giftsPrefab[giftIndex].transform.position.y, pos.z);
+        var giftPos = new Vector3(transform.position.x, m_giftsPrefab[giftIndex].transform.position.y, transform.position.z);
         Instantiate(m_giftsPrefab[giftIndex], giftPos, Quaternion.identity);
     }
 }

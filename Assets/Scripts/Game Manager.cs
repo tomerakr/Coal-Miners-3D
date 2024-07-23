@@ -6,30 +6,30 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public GameObject m_playerPrefab;
-    public GameObject m_coalShaft;
+    public GameObject m_coalShaftObj;
     public GameObject m_gameData;
-    //private Alteruna.Multiplayer m_multiplayer;
+    public List<Transform> m_spawns;
     private GameObject m_menu;
     private float m_timer = 0;
     private TMP_Text m_timerText;
     private GameObject[] m_players;
     private bool m_endedGame = false;
+    private CoalShaft m_coalShaft;
 
     // Start is called before the first frame update
     void Start()
     {
-        //m_multiplayer = Alteruna.Multiplayer.Instance;
         Time.timeScale = 1;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
 
+        var multiplayer = Alteruna.Multiplayer.Instance;
+        multiplayer.AvatarSpawnLocations = m_spawns;
+        multiplayer.SpawnAvatar();
+
+        m_coalShaft = m_coalShaftObj.GetComponent<CoalShaft>();
         m_menu = m_gameData.transform.Find("Menu").gameObject;
         m_timerText = m_gameData.transform.Find("Timer").GetComponent<TMP_Text>();
-
-        m_players = new GameObject[Utility.NUM_OF_PLAYERS];
-        var playerPos = new Vector3(0.5f, 0, 0.8f);
-        var player = Instantiate(m_playerPrefab, playerPos, m_playerPrefab.transform.rotation);
-        m_players[0] = player;
     }
         
     // Update is called once per frame
@@ -41,13 +41,28 @@ public class GameManager : MonoBehaviour
         //opens menu
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Cursor.visible = !Cursor.visible;
-            Time.timeScale = (Time.timeScale + 1) % 2;
-            m_menu.SetActive(!m_menu.activeInHierarchy);
+            ToggleMenu();            
         }
-        if (AllPlayersAreDead())
+        m_coalShaft.CloseMap(m_timer);
+        //if (AllPlayersAreDead())
+        //{
+        //    EndOfGame();
+        //}
+    }
+
+    private void ToggleMenu()
+    {
+        if (m_menu.activeInHierarchy)
         {
-            EndOfGame();
+            Cursor.visible = false;
+            Time.timeScale = 1;
+            m_menu.SetActive(false);
+        }
+        else
+        {
+            Cursor.visible = true;
+            Time.timeScale = 0;
+            m_menu.SetActive(true);
         }
     }
 
@@ -76,7 +91,6 @@ public class GameManager : MonoBehaviour
     private void UpdateScoreboard()
     {
         var playersData = GetPlayersData();
-        Debug.Log(playersData.Count);
 
         for (int i = 0; i < Utility.TOP_SCORES; ++i)
         {
