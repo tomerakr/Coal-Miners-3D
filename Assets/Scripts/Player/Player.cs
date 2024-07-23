@@ -1,48 +1,48 @@
-using System;
 using UnityEngine;
 
-[Serializable]
 public class Player
 {
-    private readonly float      m_movementSpeed = 1.5f;
-    private readonly float      m_rotationSpeed = 200;
-    private readonly float      m_gravity = 9.81f;
-    private readonly float      m_jumpSpeed = 5;
-    private readonly float      m_meleeRange = 0.5f;
-    private Vector3             m_moveVelocity;
-    private Vector3             m_turnVelocity;
+    private readonly float m_movementSpeed = 0.8f;
+    private readonly float m_rotationSpeed = 150;
+    private readonly float m_gravity = 9.81f;
+    private readonly float m_jumpSpeed = 5;
+    private readonly float m_meleeRange = 0.5f;
+    private Vector3 m_moveVelocity;
+    private Vector3 m_turnVelocity;
     private CharacterController m_characterController;
-    private float               m_dynamiteRadius;
-    private bool                m_alive = true;
-    private bool                m_canJump;
-    private bool                m_hasPickaxe;
-    private int                 m_dynamiteCount;
-    private int                 m_availableDynamites;
-    private int                 m_life = 100;
-    private int                 m_score = 0;
-    private readonly string     m_name;
+    private float m_dynamiteRadius;
+    private bool m_alive = true;
+    private bool m_canJump;
+    private bool m_hasPickaxe;
+    private int m_dynamiteCount;
+    private int m_availableDynamites;
+    private int m_life = 100;
+    private int m_score = 0;
+    private readonly string m_name;
     private readonly GameObject m_playerObject;
-    private readonly Camera     m_camera;
-    private readonly float      m_maxTilt = 20f;
-    private float               m_currentPitch;
-    private readonly float      m_dmgCooldown = 1;
-    private float               m_timeSinceTakenDmg = 0;
-    private Transform           m_flashLightTransform;
-    
-    public Player(GameObject playerObject, string name = "player 1")
+    private readonly Camera m_camera;
+    private readonly float m_maxTilt = 20f;
+    private float m_currentPitch;
+    private readonly float m_dmgCooldown = 0.5f;
+    private float m_timeSinceTakenDmg = 0;
+    private Transform m_flashLightTransform;
+    private Animator m_animator;
+
+    public Player(GameObject playerObject/*, string name = "player 1"*/)
     {
-        m_characterController   = playerObject.GetComponent<CharacterController>();
-        m_dynamiteRadius        = Utility.DYNAMITE_RADIUS;
-        m_alive                 = true;
-        m_name                  = name;
-        m_playerObject          = playerObject;
-        m_dynamiteCount         = 1;
-        m_availableDynamites    = m_dynamiteCount;
-        m_flashLightTransform   = playerObject.transform.Find("Miner3D").Find("Light.001").Find("Flash Light");
-        m_camera                = playerObject.GetComponentInChildren<Camera>();
-        m_currentPitch          = 0;
-        m_canJump               = false;
-        m_hasPickaxe            = false;
+        m_characterController = playerObject.GetComponent<CharacterController>();
+        m_dynamiteRadius = Utility.DYNAMITE_RADIUS;
+        m_alive = true;
+        m_name = PlayerPrefs.GetString("Name");
+        m_playerObject = playerObject;
+        m_dynamiteCount = 1;
+        m_availableDynamites = m_dynamiteCount;
+        m_flashLightTransform = playerObject.transform.Find("Miner3D").Find("Light.001").Find("Flash Light");
+        m_camera = playerObject.GetComponentInChildren<Camera>();
+        m_currentPitch = 0;
+        m_canJump = false;
+        m_hasPickaxe = false;
+        m_animator = playerObject.GetComponentInChildren<Animator>();
     }
 
     public void DoMovement()
@@ -71,6 +71,7 @@ public class Player
         m_turnVelocity = mouseX * m_rotationSpeed * m_playerObject.transform.up;
 
         m_moveVelocity.y -= m_gravity * Time.deltaTime;
+        m_animator.SetBool("walking", m_moveVelocity.x != 0 || m_moveVelocity.z != 0);
         m_characterController.Move(m_moveVelocity * Time.deltaTime);
         m_playerObject.transform.Rotate(m_turnVelocity * Time.deltaTime);
 
@@ -168,7 +169,7 @@ public class Player
         }
     }
 
-    public void RestoreAvailableDynamites()
+    public void RestoreDynamite()
     {
         if (m_availableDynamites == m_dynamiteCount)
         {

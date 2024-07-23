@@ -1,13 +1,37 @@
 using System.Collections.Generic;
 using TMPro;
+using Alteruna;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ButtonActions : MonoBehaviour
+public class ButtonActions : AttributesSync
 {
+    public GameObject m_textField;
+    public GameObject m_roomMenu;
+
+    [SerializeField] private int m_mapSeed;
+
     public void LoadGameScene()
     {
-        SceneManager.LoadScene("Game");
+        StaticData.m_isOwner = true;
+        var rand = new System.Random();
+        m_mapSeed = rand.Next();
+        StaticData.m_mapSeed = m_mapSeed;
+        BroadcastRemoteMethod("LoadOtherUsersToScene");
+    }
+
+    [SynchronizableMethod]
+    public void LoadOtherUsersToScene()
+    {
+        Multiplayer.Instance.LoadScene("Game");
+    }
+
+    public void ToggleRoomMenu()
+    {
+        if (m_roomMenu != null)
+        {
+            m_roomMenu.SetActive(!m_roomMenu.activeInHierarchy);
+        }
     }
 
     public void ReloadGame()
@@ -55,5 +79,14 @@ public class ButtonActions : MonoBehaviour
 
         StaticData.m_scoreLines = scoreLines;
         scoreboard.SetActive(true);
+    }
+
+    public void SaveName()
+    {
+        if (m_textField != null)
+        {
+            PlayerPrefs.SetString("Name", m_textField.GetComponent<TMP_Text>().text);
+            m_textField.transform.parent.parent.parent.gameObject.SetActive(false);
+        }
     }
 }

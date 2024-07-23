@@ -108,6 +108,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 280871930d0ae52468dc01f4f3f38cdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Multiplayer: {fileID: 0}
+  _uidString: 3305042c-f537-4ce9-bde2-fe69bc8c60b5
+  Reliability: 1
+  LocalMethodBehavior: 1
   m_giftsPrefab:
   - {fileID: 1903962572401691165, guid: aa092211fe2855c418a36091ec6314a2, type: 3}
   - {fileID: 7337144862209170289, guid: d0a2ff12e3a00f9418b862f4fe65e7eb, type: 3}

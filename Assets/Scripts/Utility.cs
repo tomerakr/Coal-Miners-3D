@@ -7,8 +7,8 @@ public static class Utility
     public static int NUM_OF_PLAYERS                = 1;
     public static int SMALL_DYNAMITE_DMG_MAX        = 34;
     public static int SMALL_DYNAMITE_DMG_MIN        = 10;
-    public static int BIG_DYNAMITE_DMG_MIN          = 44;
-    public static int BIG_DYNAMITE_DMG_MAX          = 20;
+    public static int BIG_DYNAMITE_DMG_MIN          = 20;
+    public static int BIG_DYNAMITE_DMG_MAX          = 44;
     public static int EXPLOSION_ANIMATION_DURATION  = 1;
     public static int BREALABLE_SCORE               = 76;
     public static int GIFT_CHANCE                   = 99;
@@ -18,11 +18,14 @@ public static class Utility
     public static int MAX_HP                        = 100;
     public static int FLIP_CHANCE                   = 50;
     public static int START_X_GIFT_ICON             = 280;
-    public static int START_Y_GIFT_ICON             = 10;
+    public static int START_Y_GIFT_ICON             = 15;
     public static int GIFT_ICON_SPCAE               = 5;
     public static int FLASHLIGHT_PITCH              = 25;
-    public static int TOP_SCORES                    = 5;
-
+    public static int TOP_SCORES                    = 5; 
+    public static int CLOSE_MAP_TIME_INTERVAL       = 30;
+    public static int MAX_CLOSE_TIMES               = 3;
+    public static int FOG_DAMAGE                    = 1;
+    public static int GIFT_AMOUNT                   = 5;
     public static float DYNAMITE_RADIUS             = 1.5f;
     public static float BIG_DYNAMITE_RADIUS         = 2;
     public static float OBJECT_MARGIN               = 0.375f;

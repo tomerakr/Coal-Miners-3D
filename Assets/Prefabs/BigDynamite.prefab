@@ -135,10 +135,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b71bf10072c84ca409272a3868bf7e0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Multiplayer: {fileID: 0}
+  _uidString: 484a1436-3c92-4126-987f-fef1dbbc9479
+  Reliability: 1
+  LocalMethodBehavior: 1
   m_maxHits: 25
   m_hitLayer:
     serializedVersion: 2
-    m_Bits: 72
+    m_Bits: 328
   m_blockExplosionLayer:
     serializedVersion: 2
     m_Bits: 128
