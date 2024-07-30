@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -32,6 +33,7 @@ public class PlayerObject : MonoBehaviour
             {
                 child.gameObject.layer = characterLayerIndex;
             }
+            transform.Find("Player name canvas").gameObject.layer = characterLayerIndex;
         }
 
         transform.Find("Camera").gameObject.SetActive(true); 
@@ -103,25 +105,19 @@ public class PlayerObject : MonoBehaviour
     {
         if (m_dead) return;
 
-        //TODO: apply death animation
-        //yield for animation length
-        
-        gameObject.SetActive(false);
-
-        m_dead = true;
+        StartCoroutine(DeathAnimation());
     }
 
-    //private void CheckDropDynamite()
-    //{
-    //    if (m_player.DroppedDynamite())
-    //    {
-    //        var spawnPosition = new Vector3(transform.position.x, 0.1f, transform.position.z);
-    //        var dynamitePrefab = m_player.GetDynamiteRadius() > Utility.DYNAMITE_RADIUS ? m_bigDynamitePrefab : m_dynamitePrefab;
-    //        var dynamite = Instantiate(dynamitePrefab, spawnPosition, Quaternion.identity);
-    //        dynamite.GetComponent<Dynamite>().SetOwner(m_player);
-
-    //    }
-    //}
+    private IEnumerator DeathAnimation()
+    {
+        foreach (Transform child in transform.Find("Miner3D"))
+        {
+            child.gameObject.layer = 8;
+        }
+        yield return new WaitForSeconds(2.2f);
+        gameObject.SetActive(false);
+        m_dead = true;
+    }
 
     public Player GetPlayer() { return m_player; }
 

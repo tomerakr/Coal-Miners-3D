@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Fogcollision : MonoBehaviour
 {
+    public int m_fogDamge { get; set; }
+
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -26,7 +28,7 @@ public class Fogcollision : MonoBehaviour
         {
             while (true)
             {
-                player.DealDamage(Utility.FOG_DAMAGE);
+                player.DealDamage(m_fogDamge);
                 yield return null; // Wait for the next frame
             }
         }

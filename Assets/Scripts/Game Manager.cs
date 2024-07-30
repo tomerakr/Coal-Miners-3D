@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,10 +10,10 @@ public class GameManager : MonoBehaviour
     public GameObject m_coalShaftObj;
     public GameObject m_gameData;
     public List<Transform> m_spawns;
+    public List<PlayerObject> m_players;
     private GameObject m_menu;
     private float m_timer = 0;
     private TMP_Text m_timerText;
-    private GameObject[] m_players;
     private bool m_endedGame = false;
     private CoalShaft m_coalShaft;
 
@@ -22,10 +23,19 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
+        m_players = new List<PlayerObject>();
 
         var multiplayer = Alteruna.Multiplayer.Instance;
         multiplayer.AvatarSpawnLocations = m_spawns;
         multiplayer.SpawnAvatar();
+
+        foreach (var avatar in multiplayer.GetAvatars())
+        {
+            if (avatar != null)
+            {
+                m_players.Add(avatar.gameObject.GetComponent<PlayerObject>());
+            }
+        }
 
         m_coalShaft = m_coalShaftObj.GetComponent<CoalShaft>();
         m_menu = m_gameData.transform.Find("Menu").gameObject;
@@ -44,10 +54,10 @@ public class GameManager : MonoBehaviour
             ToggleMenu();            
         }
         m_coalShaft.CloseMap(m_timer);
-        //if (AllPlayersAreDead())
-        //{
-        //    EndOfGame();
-        //}
+        if (AllPlayersAreDead())
+        {
+            EndOfGame();
+        }
     }
 
     private void ToggleMenu()
@@ -55,23 +65,24 @@ public class GameManager : MonoBehaviour
         if (m_menu.activeInHierarchy)
         {
             Cursor.visible = false;
-            Time.timeScale = 1;
+            //Time.timeScale = 1;
             m_menu.SetActive(false);
         }
         else
         {
             Cursor.visible = true;
-            Time.timeScale = 0;
+            //Time.timeScale = 0;
             m_menu.SetActive(true);
         }
     }
 
     private bool AllPlayersAreDead()
     {
+        if (0 == m_players.Count) { return false; } // single player
+
         foreach (var player in m_players)
         {
-            var playerObj = player.GetComponent<PlayerObject>(); //TODO: check why sometimes its null
-            if (playerObj.IsAlive())
+            if (player != null && player.IsAlive())
             {
                 return false;
             }
@@ -86,6 +97,7 @@ public class GameManager : MonoBehaviour
 
         UpdateScoreboard();
         m_endedGame = true;
+        SceneManager.LoadScene("Menu");
     }
 
     private void UpdateScoreboard()

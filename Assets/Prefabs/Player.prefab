@@ -255,7 +255,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 571280800453856383}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 3.039}
+  m_LocalPosition: {x: 0, y: 0, z: 3.026}
   m_LocalScale: {x: 0.004686451, y: 0.004686451, z: 0.004686451}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -263,7 +263,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -957.2481, y: -539.5769}
+  m_AnchoredPosition: {x: -957.2481, y: -539.5675}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2750989533151851689
@@ -321,8 +321,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 32
-  m_fontSizeBase: 32
+  m_fontSize: 28
+  m_fontSizeBase: 28
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2300,6 +2300,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: efa3db54d2799484f8e1ab2a650b3194, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4003602404959186355}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: efa3db54d2799484f8e1ab2a650b3194, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 526669459298961467}
   m_SourcePrefab: {fileID: 100100000, guid: efa3db54d2799484f8e1ab2a650b3194, type: 3}
 --- !u!4 &556581522218699080 stripped
 Transform:
@@ -2332,6 +2335,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &526669459298961467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 932965709037966322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -805392892, guid: 0ae8d181602a00248a82f64a684a1c88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Multiplayer: {fileID: 0}
+  _uidString: bc0d057e-8955-48df-8ac5-64e12cb09030
+  Reliability: 1
+  LocalMethodBehavior: 1
+  Animator: {fileID: 0}
 --- !u!4 &4639972456220275226 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4587029663812805447, guid: efa3db54d2799484f8e1ab2a650b3194, type: 3}

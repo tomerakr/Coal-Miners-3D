@@ -914,6 +914,9 @@ MonoBehaviour:
   _uidString: 
   Reliability: 1
   LocalMethodBehavior: 1
+  m_textField: {fileID: 0}
+  m_roomMenu: {fileID: 0}
+  m_howToPlay: {fileID: 0}
   m_mapSeed: 0
 --- !u!1 &232087625
 GameObject:
@@ -1612,6 +1615,7 @@ MonoBehaviour:
   - {fileID: 943237324}
   - {fileID: 398290268}
   - {fileID: 139920112}
+  m_players: []
 --- !u!4 &453300355
 Transform:
   m_ObjectHideFlags: 0
@@ -3593,6 +3597,9 @@ MonoBehaviour:
   _uidString: 
   Reliability: 1
   LocalMethodBehavior: 1
+  m_textField: {fileID: 0}
+  m_roomMenu: {fileID: 0}
+  m_howToPlay: {fileID: 0}
   m_mapSeed: 0
 --- !u!1 &1462278418
 GameObject:

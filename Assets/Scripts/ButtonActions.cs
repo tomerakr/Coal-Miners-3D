@@ -8,6 +8,7 @@ public class ButtonActions : AttributesSync
 {
     public GameObject m_textField;
     public GameObject m_roomMenu;
+    public GameObject m_howToPlay;
 
     [SerializeField] private int m_mapSeed;
 
@@ -87,6 +88,14 @@ public class ButtonActions : AttributesSync
         {
             PlayerPrefs.SetString("Name", m_textField.GetComponent<TMP_Text>().text);
             m_textField.transform.parent.parent.parent.gameObject.SetActive(false);
+        }
+    }
+
+    public void ShowHowToPlay()
+    {
+        if (m_howToPlay != null)
+        {
+            m_howToPlay.SetActive(true);
         }
     }
 }

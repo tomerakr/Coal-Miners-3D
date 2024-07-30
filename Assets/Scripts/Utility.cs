@@ -5,13 +5,13 @@ public static class Utility
     public static int MATRIX_SIZE                   = 13 + 2; // + 2 for outline wall
     public static int BREAKABLE_PERCENTAGE          = 90;
     public static int NUM_OF_PLAYERS                = 1;
-    public static int SMALL_DYNAMITE_DMG_MAX        = 34;
     public static int SMALL_DYNAMITE_DMG_MIN        = 10;
+    public static int SMALL_DYNAMITE_DMG_MAX        = 34;
     public static int BIG_DYNAMITE_DMG_MIN          = 20;
     public static int BIG_DYNAMITE_DMG_MAX          = 44;
     public static int EXPLOSION_ANIMATION_DURATION  = 1;
     public static int BREALABLE_SCORE               = 76;
-    public static int GIFT_CHANCE                   = 99;
+    public static int GIFT_CHANCE                   = 30;
     public static int HP_GIFT_AMOUNT                = 33;
     public static int DYNAMITE_INCREASE             = 1;
     public static int MAX_DYNAMITES                 = 3;

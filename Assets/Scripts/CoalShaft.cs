@@ -182,7 +182,10 @@ public class CoalShaft : AttributesSync
             }
             else
             {
-                //increase damage done
+                for (int i = 0; i < m_fogObjects.Count; ++i)
+                {
+                    m_fogObjects[i].GetComponent<Fogcollision>().m_fogDamge += Utility.FOG_DAMAGE * m_timeClosed;
+                }
             }
             m_timeClosed += 1;
         }
@@ -218,6 +221,7 @@ public class CoalShaft : AttributesSync
         var fogObj = Instantiate(m_fogPrefab, pos, fogRotation);
         fogObj.transform.localScale = new Vector3(fogScale.x * (Utility.MATRIX_SIZE - 2), fogScale.y, fogScale.z);
         fogObj.GetComponent<BoxCollider>().center = fogCenter;
+        fogObj.GetComponent<Fogcollision>().m_fogDamge = Utility.FOG_DAMAGE;
 
         m_fogObjects.Add(fogObj);
     }

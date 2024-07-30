@@ -17,10 +17,7 @@ public class Dynamite : AttributesSync
     public GameObject m_bigExplosionPrefab;
     private Collider[] m_hits;
 
-    void Start()
-    {
-        
-    }
+    void Start() { }
 
     public void SetOwner(Player owner, float radius)
     {

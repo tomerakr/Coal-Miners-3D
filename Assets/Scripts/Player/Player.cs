@@ -21,7 +21,7 @@ public class Player
     private readonly string m_name;
     private readonly GameObject m_playerObject;
     private readonly Camera m_camera;
-    private readonly float m_maxTilt = 20f;
+    private readonly float m_maxTilt = 90f;
     private float m_currentPitch;
     private readonly float m_dmgCooldown = 0.5f;
     private float m_timeSinceTakenDmg = 0;
@@ -110,7 +110,19 @@ public class Player
         }
     }
 
-    public bool IsAlive() { return m_alive; }
+    public bool IsAlive()
+    {
+        if (!m_alive)
+        {
+            m_animator.SetBool("dead", true);
+            var dir = (m_camera.transform.position - m_playerObject.transform.position).normalized;
+            var pos = m_playerObject.transform.position +  dir * 1.05f;
+            m_camera.transform.position = pos;
+            m_camera.transform.LookAt(m_playerObject.transform.Find("Miner3D"));
+            return false;
+        }
+        return true; 
+    }
 
     public void AddScore(int score) { m_score += score; }
 

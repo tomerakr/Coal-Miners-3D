@@ -5,15 +5,17 @@ public class MenuController : AttributesSync
 {
     public GameObject[] m_buttons;
     public GameObject m_scoreboard;
+    public GameObject m_howToPlay;
     public GameObject m_nameInput;
 
     // Start is called before the first frame update
     void Start()
     {
         Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = true;
         StaticData.m_buttons = m_buttons;
         StaticData.m_scoreboard = m_scoreboard;
-        if (!PlayerPrefs.HasKey("Name")) //TODO
+        if (!PlayerPrefs.HasKey("Name"))
         {
             m_nameInput.SetActive(true);
         }
@@ -30,7 +32,12 @@ public class MenuController : AttributesSync
 
     private void CloseMenues()
     {
-        //close scoreboard
+        if (m_howToPlay != null)
+        {
+            m_howToPlay.SetActive(false);
+        }
+
+        //close scoreboardx
         var scoreboard = StaticData.m_scoreboard;
         var scoreLines = StaticData.m_scoreLines;
 
